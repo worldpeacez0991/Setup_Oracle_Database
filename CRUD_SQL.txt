@@ -1,0 +1,59 @@
+--EDIT DISPLAY of DATES in ORACLE DB
+alter session set nls_date_format = 'dd-MON-yyyy hh24:mi:ss';
+
+--DROP TABLE
+drop table employee;
+drop table department;
+
+--CREATE
+CREATE TABLE "TEST_USER1"."DEPARTMENT" (
+    "DEPT_ID"         VARCHAR2(20 BYTE),
+    "DEPARTMENT_NAME" NUMBER,
+    PRIMARY KEY ( "DEPT_ID" )
+);
+
+CREATE TABLE "TEST_USER1"."EMPLOYEE" (
+    "EMPLOYEE_ID"   NUMBER(10, 0),
+    "FIRST_NAME"    VARCHAR2(200 BYTE),
+    "LAST_NAME"     VARCHAR2(200 BYTE),
+    "SALARY"        NUMBER(10, 0),
+    "HIRE_DATE"     DATE,
+    "DEPARTMENT_ID" VARCHAR2(200 BYTE),
+    CONSTRAINT "PK_EMP_FLNAME" PRIMARY KEY ( "FIRST_NAME",
+                                             "LAST_NAME" ),
+    CONSTRAINT "FK_EMP_DEPTID" FOREIGN KEY ( "DEPARTMENT_ID" )
+        REFERENCES "TEST_USER1"."DEPARTMENT" ( "DEPT_ID" )
+);
+
+--DESCRIBE
+describe department;
+describe employee;
+
+--ALTER TABLE
+alter table department modify DEPARTMENT_NAME VARCHAR(20);
+
+--INSERT
+insert into department (DEPT_ID, DEPARTMENT_NAME) VALUES (1, 'IT');
+insert into employee (EMPLOYEE_ID, FIRST_NAME, LAST_NAME, DEPARTMENT_ID) VALUES (1, 'DONALD', 'TAN', 1);
+insert into employee (EMPLOYEE_ID, FIRST_NAME, LAST_NAME, DEPARTMENT_ID) VALUES (2, 'DONALD', 'Brown', 1);
+
+--READ
+select * from department;
+select * from employee;
+
+--UPDATE
+select * from employee 
+where department_id = 1;
+
+update employee set SALARY = '3000' , HIRE_DATE= to_date('2011/04/22 08:30:00', 'yyyy/mm/dd hh24:mi:ss')
+where department_id = 1;
+
+--DELETE
+--delete employee where UPPER(LAST_NAME) in ('TAN','BROWN') ;
+
+SELECT
+    a.*,
+    b.department_name
+FROM
+    employee   a,
+    department b;
